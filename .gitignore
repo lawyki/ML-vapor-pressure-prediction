@@ -1,8 +1,69 @@
+# Python
 __pycache__/
 *.pyc
-.venv/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+*.egg
 .ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Data — too big and/or local-only. Real datasets live at
+# ~/Documents/projects/molecular-ml/data/ (see README.md for layout).
+data/
+datasets/
 *.csv
+*.tsv
+*.parquet
+*.feather
+*.arrow
+
+# Model / pickle / serialized output — never commit
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.bin
+*.gguf
+*.safetensors
+*.onnx
+*.npy
+*.npz
+models/
+checkpoints/
+weights/
+
+# Experiment tracking / runs
+wandb/
+runs/
+outputs/
+mlruns/
+lightning_logs/
+tensorboard_logs/
+tb_logs/
+
+# Database files
 *.db
+*.sqlite
+*.sqlite3
+
+# Editor / OS
 .DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Local agent / tool config
 .claude/
+.env
+.env.local
