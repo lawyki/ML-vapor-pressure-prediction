@@ -57,3 +57,7 @@ from model family, not hyperparameter tuning.
 ## Stack
 
 Python 3.14, PyTorch, XGBoost, Optuna, RDKit, scikit-learn, pandas, numpy
+
+## Status
+
+Active — last updated 2026-05-19.
