@@ -129,4 +129,4 @@ SciPy, Matplotlib
 
 ## Status
 
-Active. Last updated 2026-05-19.
+Active. Last updated 2026-11-23.
