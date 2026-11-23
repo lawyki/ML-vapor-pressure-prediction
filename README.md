@@ -32,11 +32,17 @@ days. A friend and I asked Aalto University whether we could spend ours with
 researchers, and we were hosted by a computer science PhD student and a
 postdoctoral researcher from biology.
 
-On the first day, the PhD student showed us what he was working on: predicting
-vapor pressure from a molecule's structure, its skeleton, instead of from
+On the first day, the PhD student introduced his research: predicting vapor
+pressure from a molecule's structure, its skeleton, instead of from
 thermodynamic conditions. The point is to find out which molecules could help
-form clouds. This repository is my own attempt at that problem, built from the
-same kind of public data.
+form clouds. We only saw a short introduction and a demonstration.
+
+Everything in this repository I built myself afterwards. I stayed in touch with
+the PhD student, and when my neural network models reached an MAE of about 0.73,
+I told him about it. He shared the full dataset with me and pointed me to better
+approaches, and the gradient boosting models in v4 then reached about 0.65.
+That is roughly where published models on this dataset tend to level off;
+getting much lower needs different techniques.
 
 ## Why this is hard
 
