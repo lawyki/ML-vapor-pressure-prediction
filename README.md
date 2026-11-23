@@ -6,44 +6,32 @@ thermodynamic inputs and no hand-crafted descriptors.
 
 ## In plain terms
 
-Vapor pressure tells you how easily a molecule escapes from a liquid or solid
-into the air. Molecules with very low vapor pressure tend to stay put and
-condense onto tiny particles in the atmosphere. Those particles (aerosols)
-scatter sunlight and help clouds form, so they matter for both air quality and
-climate.
+Vapor pressure tells you how easily a molecule escapes into the air. Molecules
+with very low vapor pressure condense onto tiny airborne particles (aerosols),
+which scatter sunlight and help clouds form. So knowing it matters for air
+quality and climate.
 
-The problem is that vapor pressure has only been measured for a small number of
-compounds, while the atmosphere contains tens of thousands of different organic
-molecules. Computing it with quantum chemistry is accurate but slow. This
-project asks a simple question:
+It has only been measured for a few compounds, and computing it with quantum
+chemistry is slow. This project asks: **can a model learn vapor pressure just
+from a molecule's structure?**
 
-**Can a model learn vapor pressure just by looking at a molecule's structure?**
-
-The best model here predicts it to within a factor of about 4.5 on average,
-across values that span more than ten orders of magnitude. That matches a
-published graph neural network on the same dataset, using a much simpler
-representation.
+The best model here is off by a factor of about 4.5 on average, across values
+spanning more than ten orders of magnitude. That matches a published graph
+neural network on the same dataset, with a much simpler representation.
 
 ## How this started
 
-In Finnish upper secondary school there is a work-life orientation period
-(TET), where students can ask any organisation to host them for a couple of
-days. A friend and I asked Aalto University whether we could spend ours with
-researchers, and we were hosted by a computer science PhD student and a
-postdoctoral researcher from biology.
+During TET, the Finnish upper secondary school work-life orientation, a friend
+and I asked Aalto University if we could spend two days with researchers. A
+computer science PhD student showed us his work: predicting vapor pressure from
+a molecule's skeleton to find which molecules could help form clouds. It was a
+short introduction and demo.
 
-On the first day, the PhD student introduced his research: predicting vapor
-pressure from a molecule's structure, its skeleton, instead of from
-thermodynamic conditions. The point is to find out which molecules could help
-form clouds. We only saw a short introduction and a demonstration.
-
-Everything in this repository I built myself afterwards. I stayed in touch with
-the PhD student, and when my neural network models reached a mean absolute error of about 0.73 (in log₁₀ units, as are all
-errors in this README),
-I told him about it. He shared the full dataset with me and pointed me to better
-approaches, and the gradient boosting models in v4 then reached about 0.65.
-That is roughly where published models on this dataset tend to level off;
-getting much lower needs different techniques.
+I built everything in this repository myself afterwards. When my neural
+networks reached about 0.73 (all errors here are mean absolute error in log₁₀
+units), I told the PhD student. He shared the full dataset and pointed me to
+better approaches, and the v4 gradient boosting models reached about 0.65,
+roughly where published models on this dataset level off.
 
 ## Why this is hard
 
