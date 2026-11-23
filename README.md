@@ -38,7 +38,8 @@ thermodynamic conditions. The point is to find out which molecules could help
 form clouds. We only saw a short introduction and a demonstration.
 
 Everything in this repository I built myself afterwards. I stayed in touch with
-the PhD student, and when my neural network models reached an MAE of about 0.73,
+the PhD student, and when my neural network models reached a mean absolute error of about 0.73 (in log₁₀ units, as are all
+errors in this README),
 I told him about it. He shared the full dataset with me and pointed me to better
 approaches, and the gradient boosting models in v4 then reached about 0.65.
 That is roughly where published models on this dataset tend to level off;
