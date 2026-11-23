@@ -24,6 +24,20 @@ across values that span more than ten orders of magnitude. That matches a
 published graph neural network on the same dataset, using a much simpler
 representation.
 
+## How this started
+
+In Finnish upper secondary school there is a work-life orientation period
+(TET), where students can ask any organisation to host them for a couple of
+days. A friend and I asked Aalto University whether we could spend ours with
+researchers, and we were hosted by a computer science PhD student and a
+postdoctoral researcher from biology.
+
+On the first day, one of them showed us what he was working on: predicting
+vapor pressure from a molecule's structure, its skeleton, instead of from
+thermodynamic conditions. The point is to find out which molecules could help
+form clouds. This repository is my own attempt at that problem, built from the
+same kind of public data.
+
 ## Why this is hard
 
 Vapor pressure is physically tied to the energy needed to vaporize a molecule
