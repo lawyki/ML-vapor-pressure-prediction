@@ -32,7 +32,7 @@ days. A friend and I asked Aalto University whether we could spend ours with
 researchers, and we were hosted by a computer science PhD student and a
 postdoctoral researcher from biology.
 
-On the first day, one of them showed us what he was working on: predicting
+On the first day, the PhD student showed us what he was working on: predicting
 vapor pressure from a molecule's structure, its skeleton, instead of from
 thermodynamic conditions. The point is to find out which molecules could help
 form clouds. This repository is my own attempt at that problem, built from the
