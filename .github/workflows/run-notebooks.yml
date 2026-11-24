@@ -1,7 +1,11 @@
 name: Run notebooks
 
 # Re-executes the notebooks on a clean machine and commits them with their
-# outputs saved, so results and plots are visible on GitHub.
+# outputs saved, so results and plots are visible on GitHub. Each notebook runs
+# in its own job and is committed as soon as it finishes.
+# ML_pytorch_analysis_v4.ipynb is not in the list: its 30-trial Optuna search
+# plus 5-seed ensemble takes longer than the 6 h limit of GitHub's free runners,
+# so it is run on a local machine instead.
 on:
   workflow_dispatch:
   push:
@@ -19,6 +23,14 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        notebook:
+          - ML_pytorch_analysis_v4_diagnostics.ipynb
+          - ML_pytorch_analysis_v2.ipynb
+          - ML_pytorch_analysis_v3.ipynb
     steps:
       - uses: actions/checkout@v4
 
@@ -43,30 +55,17 @@ jobs:
           cp "$f" data/Dataframe.csv
           python -c "import pandas as pd; d=pd.read_csv('data/Dataframe.csv'); print(d.shape); assert {'SMILES','pSat_Pa'} <= set(d.columns), list(d.columns)"
 
-      - name: Execute notebooks
+      - name: Execute ${{ matrix.notebook }}
         run: |
-          for nb in ML_pytorch_analysis_v4.ipynb ML_pytorch_analysis_v4_diagnostics.ipynb ML_pytorch_analysis_v2.ipynb ML_pytorch_analysis_v3.ipynb; do
-            echo "::group::$nb"
-            if jupyter nbconvert --to notebook --execute --inplace \
-                 --ExecutePreprocessor.timeout=-1 --ExecutePreprocessor.kernel_name=python3 "$nb"; then
-              echo "ok $nb"
-            else
-              echo "$nb" >> failed.txt
-            fi
-            echo "::endgroup::"
-          done
+          jupyter nbconvert --to notebook --execute --inplace \
+            --ExecutePreprocessor.timeout=-1 --ExecutePreprocessor.kernel_name=python3 \
+            "${{ matrix.notebook }}"
 
-      - name: Commit notebooks with outputs
+      - name: Commit notebook with outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add *.ipynb
-          if git diff --cached --quiet; then echo "nothing to commit"; else
-            git commit -m "Run notebooks with saved outputs"
-            git push
-          fi
-
-      - name: Report failures
-        if: always()
-        run: |
-          if [ -f failed.txt ]; then echo "Failed:"; cat failed.txt; exit 1; fi
+          git add "${{ matrix.notebook }}"
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "Run ${{ matrix.notebook }} with saved outputs"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done

@@ -110,8 +110,9 @@ over molecular conformations, which is a likely source of irreducible noise.
    into a `data/` folder in the repository.
 3. Run the notebook top to bottom.
 
-The notebooks in this repository were executed on a clean machine by the
-`Run notebooks` GitHub Actions workflow, so the outputs you see are reproducible.
+The v2, v3 and diagnostics notebooks are executed on a clean machine by the
+`Run notebooks` GitHub Actions workflow. v4's full search takes longer than
+GitHub's 6-hour limit, so it is run locally.
 
 All versions use the same split (`random_state=42`), so results are directly
 comparable.
