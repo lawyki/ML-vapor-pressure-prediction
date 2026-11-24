@@ -106,9 +106,12 @@ over molecular conformations, which is a likely source of irreducible noise.
 ## Running it
 
 1. Install the dependencies: `pip install -r requirements.txt`
-2. Download the dataset from Zenodo (link above).
-3. Change the `pd.read_csv(...)` path in the notebook to point at your copy.
-4. Run the notebook top to bottom.
+2. Download `data.zip` from Zenodo (link above), unzip it and copy `Dataframe.csv`
+   into a `data/` folder in the repository.
+3. Run the notebook top to bottom.
+
+The notebooks in this repository were executed on a clean machine by the
+`Run notebooks` GitHub Actions workflow, so the outputs you see are reproducible.
 
 All versions use the same split (`random_state=42`), so results are directly
 comparable.

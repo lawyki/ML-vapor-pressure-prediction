@@ -1,0 +1,72 @@
+name: Run notebooks
+
+# Re-executes the notebooks on a clean machine and commits them with their
+# outputs saved, so results and plots are visible on GitHub.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/run-notebooks.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: run-notebooks
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install xgboost optuna rdkit scikit-learn pandas numpy matplotlib scipy nbconvert ipykernel
+
+      - name: Download dataset (Zenodo record 18669279)
+        run: |
+          curl -fL --retry 3 -o data.zip "https://zenodo.org/records/18669279/files/data.zip?download=1"
+          echo "e8533469a9a0fdad3b8e55501b8d6c8b  data.zip" | md5sum -c
+          unzip -q data.zip -d raw
+          f=$(find raw -name Dataframe.csv | head -n 1)
+          test -n "$f" || { echo "Dataframe.csv not found in data.zip"; find raw -maxdepth 3 | head -50; exit 1; }
+          mkdir -p data
+          cp "$f" data/Dataframe.csv
+          python -c "import pandas as pd; d=pd.read_csv('data/Dataframe.csv'); print(d.shape); assert {'SMILES','pSat_Pa'} <= set(d.columns), list(d.columns)"
+
+      - name: Execute notebooks
+        run: |
+          for nb in ML_pytorch_analysis_v4.ipynb ML_pytorch_analysis_v4_diagnostics.ipynb ML_pytorch_analysis_v2.ipynb ML_pytorch_analysis_v3.ipynb; do
+            echo "::group::$nb"
+            if jupyter nbconvert --to notebook --execute --inplace \
+                 --ExecutePreprocessor.timeout=-1 --ExecutePreprocessor.kernel_name=python3 "$nb"; then
+              echo "ok $nb"
+            else
+              echo "$nb" >> failed.txt
+            fi
+            echo "::endgroup::"
+          done
+
+      - name: Commit notebooks with outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add *.ipynb
+          if git diff --cached --quiet; then echo "nothing to commit"; else
+            git commit -m "Run notebooks with saved outputs"
+            git push
+          fi
+
+      - name: Report failures
+        if: always()
+        run: |
+          if [ -f failed.txt ]; then echo "Failed:"; cat failed.txt; exit 1; fi
