@@ -3,9 +3,8 @@ name: Run notebooks
 # Re-executes the notebooks on a clean machine and commits them with their
 # outputs saved, so results and plots are visible on GitHub. Each notebook runs
 # in its own job and is committed as soon as it finishes.
-# ML_pytorch_analysis_v4.ipynb is not in the list: its 30-trial Optuna search
-# plus 5-seed ensemble takes longer than the 6 h limit of GitHub's free runners,
-# so it is run on a local machine instead.
+# v4 runs last: its 30-trial Optuna search may not fit in the 6 h job limit of
+# GitHub's free runners, and if it doesn't it is run on a local machine instead.
 on:
   workflow_dispatch:
   push:
@@ -31,6 +30,7 @@ jobs:
           - ML_pytorch_analysis_v4_diagnostics.ipynb
           - ML_pytorch_analysis_v2.ipynb
           - ML_pytorch_analysis_v3.ipynb
+          - ML_pytorch_analysis_v4.ipynb
     steps:
       - uses: actions/checkout@v4
 
@@ -54,6 +54,14 @@ jobs:
           mkdir -p data
           cp "$f" data/Dataframe.csv
           python -c "import pandas as pd; d=pd.read_csv('data/Dataframe.csv'); print(d.shape); assert {'SMILES','pSat_Pa'} <= set(d.columns), list(d.columns)"
+
+      # RDKit prints a deprecation warning for every fingerprint (~31k lines).
+      # Streaming that into the notebook stalls execution, so silence it in
+      # the kernel at startup without touching the notebooks.
+      - name: Silence RDKit warnings in the kernel
+        run: |
+          mkdir -p ~/.ipython/profile_default/startup
+          echo "from rdkit import RDLogger; RDLogger.DisableLog('rdApp.*')" > ~/.ipython/profile_default/startup/00-quiet-rdkit.py
 
       - name: Execute ${{ matrix.notebook }}
         run: |
